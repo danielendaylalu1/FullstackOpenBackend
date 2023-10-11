@@ -39,6 +39,26 @@ app.get("/api/persons/:id", (req, res) => {
   }
   res.json(person);
 });
+app.post("/api/persons", (req, res) => {
+  const id = Math.floor(Math.random() * (max - min + 1)) + min;
+  console.log(id);
+  const body = req.body;
+  if (!body.name && !body.number) {
+    return res.status(400).json({
+      error: "all fileds required",
+    });
+  } else if (persons.find((p) => p.name === body.name)) {
+    return res.status(400).json({
+      error: "name must be unique",
+    });
+  }
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: id,
+  };
+  res.status(200).json(person);
+});
 app.get("/info", (req, res) => {
   res.send(
     `<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`
