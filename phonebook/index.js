@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 
 let persons = [
   {
@@ -29,6 +30,7 @@ const unknownEndpoint = (req, res) => {
 };
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 morgan.token("body", (req, res) => JSON.stringify(req.body));
@@ -89,6 +91,8 @@ app.get("/info", (req, res) => {
 
 app.use(unknownEndpoint);
 
+const port = process.env.PROT || 3000;
+
 app.listen("3000", (req, res) => {
-  console.log("server started on port 3000");
+  console.log(`server started on port ${port}`);
 });
