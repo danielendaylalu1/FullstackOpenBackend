@@ -91,7 +91,7 @@ app.get("/info", (req, res) => {
 
 app.use(unknownEndpoint);
 
-const port = process.env.PROT || 3000;
+const port = process.env.PORT || 3000;
 
 app.listen("3000", (req, res) => {
   console.log(`server started on port ${port}`);
