@@ -32,6 +32,7 @@ const unknownEndpoint = (req, res) => {
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(express.static("dist"));
 
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 
@@ -91,8 +92,8 @@ app.get("/info", (req, res) => {
 
 app.use(unknownEndpoint);
 
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-app.listen("3000", (req, res) => {
-  console.log(`server started on port ${port}`);
+app.listen(PORT, (req, res) => {
+  console.log(`server started on port ${PORT}`);
 });
