@@ -93,9 +93,7 @@ app.put("/api/persons/:id", (req, res, next) => {
     context: "query",
   })
     .then((result) => {
-      res.json({
-        message: "created succesfuly",
-      });
+      res.json(result);
     })
     .catch((error) => {
       console.log(error);
