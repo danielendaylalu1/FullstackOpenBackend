@@ -1,1 +1,0 @@
-DATABASE_URL = mongodb+srv://phoebook:phonebook@phonebook.zig9nng.mongodb.net/phoneApp?retryWrites=true&w=majority
