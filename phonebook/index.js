@@ -14,6 +14,11 @@ const errHandler = (error, req, res, next) => {
       error: "malformated id",
     });
   }
+  if (error.name === "ValidationError") {
+    return res.status(404).send({
+      error: error.message,
+    });
+  }
   next(error);
 };
 const unknownEndpoint = (req, res) => {
@@ -52,7 +57,7 @@ app.get("/api/persons/:id", (req, res, next) => {
       next(error);
     });
 });
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
   console.log(body, body.name);
   if (!body.name === "" && !body.number === "") {
@@ -65,17 +70,14 @@ app.post("/api/persons", (req, res) => {
     number: body.number,
   });
 
-  Person.find({ name: { $eq: body.name } }).then((result) => {
-    if (result.length === 0) {
-      person.save().then((result) => {
-        res.json(result);
-      });
-    } else {
-      return res.json({
-        error: "user already exist",
-      });
-    }
-  });
+  person
+    .save()
+    .then((result) => {
+      res.json(result);
+    })
+    .catch((error) => {
+      next(error);
+    });
 });
 
 app.put("/api/persons/:id", (req, res, next) => {
@@ -85,7 +87,11 @@ app.put("/api/persons/:id", (req, res, next) => {
     name: body.name,
     number: body.number,
   };
-  Person.findByIdAndUpdate(id, person, { new: true })
+  Person.findByIdAndUpdate(id, person, {
+    new: true,
+    runValidators: true,
+    context: "query",
+  })
     .then((result) => {
       res.json({
         message: "created succesfuly",
