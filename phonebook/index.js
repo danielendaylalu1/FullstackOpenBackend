@@ -1,29 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
-
-let persons = [
-  {
-    id: 1,
-    name: "Arto Hellas",
-    number: "040-123456",
-  },
-  {
-    id: 2,
-    name: "Ada Lovelace",
-    number: "39-44-5323523",
-  },
-  {
-    id: 3,
-    name: "Dan Abramov",
-    number: "12-43-234345",
-  },
-  {
-    id: 4,
-    name: "Mary Poppendieck",
-    number: "39-23-6423122",
-  },
-];
+const Person = require("./models/person");
 
 const unknownEndpoint = (req, res) => {
   res.status(404).send({ error: "unknown endpoint" });
@@ -46,16 +24,21 @@ app.use(
 const date = new Date();
 
 app.get("/api/persons", (req, res) => {
-  res.json(persons);
+  Person.find({}).then((result) => {
+    res.json(result);
+  });
 });
-app.get("/api/persons/:id", (req, res) => {
-  const id = req.params.id;
-  console.log(id);
-  const person = persons.find((p) => p.id.toString() === id);
-  if (!person) {
-    return res.status(404).send("<p>person doesn't exist</p>");
-  }
-  res.json(person);
+app.get("/api/persons/:name", (req, res) => {
+  const name = req.params.name;
+  console.log(name);
+  Person.find({ name: { $eq: name } }).then((result) => {
+    res.json(result);
+  });
+  // const person = persons.find((p) => p.id.toString() === id);
+  // if (!person) {
+  //   return res.status(404).send("<p>person doesn't exist</p>");
+  // }
+  // res.json(person);
 });
 app.post("/api/persons", (req, res) => {
   const id = Math.floor(Math.random() * (1000 - 0 + 1)) + 0;
