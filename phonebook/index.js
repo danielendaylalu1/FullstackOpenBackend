@@ -3,14 +3,22 @@ const morgan = require("morgan");
 const cors = require("cors");
 const Person = require("./models/person");
 
-const unknownEndpoint = (req, res) => {
-  res.status(404).send({ error: "unknown endpoint" });
-};
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.static("dist"));
+
+const errHandler = (error, req, res, next) => {
+  if (error.name === "CastError") {
+    return res.status(400).send({
+      error: "malformated id",
+    });
+  }
+  next(error);
+};
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: "unknown endpoint" });
+};
 
 morgan.token("body", (req, res) => JSON.stringify(req.body));
 
@@ -28,44 +36,46 @@ app.get("/api/persons", (req, res) => {
     res.json(result);
   });
 });
-app.get("/api/persons/:name", (req, res) => {
-  const name = req.params.name;
-  console.log(name);
-  Person.find({ name: { $eq: name } }).then((result) => {
-    res.json(result);
-  });
-  // const person = persons.find((p) => p.id.toString() === id);
-  // if (!person) {
-  //   return res.status(404).send("<p>person doesn't exist</p>");
-  // }
-  // res.json(person);
+app.get("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id;
+  console.log(id);
+  Person.findById(id)
+    .then((result) => {
+      if (result.length > 0) {
+        res.json(result);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch((error) => {
+      console.log(error.name, "some happen");
+      next(error);
+    });
 });
 app.post("/api/persons", (req, res) => {
-  const id = Math.floor(Math.random() * (1000 - 0 + 1)) + 0;
   const body = req.body;
-  console.log(id, body, body.name);
-  if (!body.name && !body.number) {
+  console.log(body, body.name);
+  if (!body.name === "" && !body.number === "") {
     return res.status(400).json({
       error: "all fileds required",
     });
   }
-  if (
-    persons.find((p) => {
-      console.log(p.name, body.name);
-      return p.name === body.name;
-    })
-  ) {
-    return res.status(400).json({
-      error: "name must be unique",
-    });
-  }
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: id,
-  };
-  persons = persons.concat(person);
-  res.status(200).json(person);
+  });
+
+  Person.find({ name: { $eq: body.name } }).then((result) => {
+    if (result.length === 0) {
+      person.save().then((result) => {
+        res.json(result);
+      });
+    } else {
+      return res.json({
+        error: "user already exist",
+      });
+    }
+  });
 });
 app.get("/info", (req, res) => {
   res.send(
@@ -73,7 +83,37 @@ app.get("/info", (req, res) => {
   );
 });
 
+app.put("/api/persons/:id", (req, res, next) => {
+  const body = req.body;
+  const id = req.params.id;
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
+  Person.findByIdAndUpdate(id, person, { new: true })
+    .then((result) => {
+      res.json({
+        message: "created succesfuly",
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+      next(error);
+    });
+});
+
+app.delete("/api/persons/:id", (req, res, next) => {
+  const id = req.params.id;
+  Person.findByIdAndDelete(id)
+    .then((result) => {
+      res.status(204).end();
+    })
+    .catch((error) => next(error));
+});
+
 app.use(unknownEndpoint);
+
+app.use(errHandler);
 
 const PORT = process.env.PORT || 3000;
 
