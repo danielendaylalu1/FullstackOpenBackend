@@ -8,7 +8,8 @@ if (process.argv.length < 3) {
 console.log(process.argv[2]);
 const password = process.argv[2];
 
-const url = `mongodb+srv://phoebook:${password}@phonebook.zig9nng.mongodb.net/phoneApp?retryWrites=true&w=majority`;
+const url = process.env.DATABASE_URL;
+
 console.log(url);
 mongoose.set("strictQuery", false);
 mongoose.connect(url);
