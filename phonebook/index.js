@@ -38,13 +38,13 @@ app.get("/api/persons", (req, res) => {
 });
 app.get("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
-  console.log(id);
+  // console.log(id);
   Person.findById(id)
     .then((result) => {
-      if (result.length > 0) {
+      if (result) {
         res.json(result);
       } else {
-        response.status(404).end();
+        res.status(404).end();
       }
     })
     .catch((error) => {
@@ -77,19 +77,14 @@ app.post("/api/persons", (req, res) => {
     }
   });
 });
-app.get("/info", (req, res) => {
-  res.send(
-    `<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`
-  );
-});
 
 app.put("/api/persons/:id", (req, res, next) => {
   const body = req.body;
   const id = req.params.id;
-  const person = new Person({
+  const person = {
     name: body.name,
     number: body.number,
-  });
+  };
   Person.findByIdAndUpdate(id, person, { new: true })
     .then((result) => {
       res.json({
@@ -106,9 +101,16 @@ app.delete("/api/persons/:id", (req, res, next) => {
   const id = req.params.id;
   Person.findByIdAndDelete(id)
     .then((result) => {
+      console.log(id);
       res.status(204).end();
     })
     .catch((error) => next(error));
+});
+
+app.get("/info", (req, res) => {
+  res.send(
+    `<p>Phonebook has info for ${persons.length} people</p><p>${date}</p>`
+  );
 });
 
 app.use(unknownEndpoint);

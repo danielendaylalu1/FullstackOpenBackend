@@ -1,8 +1,3 @@
 
-POST http://localhost:3000/api/persons
+GET http://localhost:3000/api/persons/652851bf44e1bfdf8259e072
 Content-Type: application/json
-
-{
-    "name":"babi",
-    "number":"0913091259"
-}
