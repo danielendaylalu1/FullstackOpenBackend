@@ -3,6 +3,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const Person = require("./models/person");
 
+const check = new RegExp("^\\d{2,3}-\\d{6}$");
+
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -64,6 +66,9 @@ app.post("/api/persons", (req, res, next) => {
     return res.status(400).json({
       error: "all fileds required",
     });
+  }
+  if (check.test(body.number)) {
+    console.log("yes");
   }
   const person = new Person({
     name: body.name,
