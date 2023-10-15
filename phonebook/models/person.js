@@ -24,10 +24,10 @@ const personSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: function (v) {
-        return /^\\d{2,3}-\\d{6}$/.test(v);
+        return /^\\d{2,3}-\\d{5,}$/.test(v);
       },
       message: (props) =>
-        `${props.value} is not a valid string! It should have 2 or 3 numbers, followed by a hyphen, and then followed by exactly 6 numbers.`,
+        `${props.value} is not a valid string! use 09 or 032 -123456 format `,
     },
     minLength: 8,
     required: true,
