@@ -24,7 +24,8 @@ const personSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: function (v) {
-        return /^\\w{2,3}-\\w{5,}$/.test(v);
+        console.log(/^\d{2,3}-\d{5,}$/.test(v));
+        return /^\\d{2,3}-\\d{5,}$/.test(v);
       },
       message: (props) =>
         `${props.value} is not a valid string! use 09 or 032-123456 format `,
