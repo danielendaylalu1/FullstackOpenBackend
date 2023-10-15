@@ -24,10 +24,10 @@ const personSchema = new mongoose.Schema({
     type: String,
     validate: {
       validator: function (v) {
-        return /^\\d{2,3}-\\d{5,}$/.test(v);
+        return /^\\w{2,3}-\\w{5,}$/.test(v);
       },
       message: (props) =>
-        `${props.value} is not a valid string! use 09 or 032 -123456 format `,
+        `${props.value} is not a valid string! use 09 or 032-123456 format `,
     },
     minLength: 8,
     required: true,
