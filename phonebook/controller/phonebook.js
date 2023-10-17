@@ -2,7 +2,7 @@ const phonebook = require("express").Router();
 
 const Person = require("../models/person");
 
-phonebook.get("", (req, res) => {
+phonebook.get("/", (req, res) => {
   Person.find({}).then((result) => {
     res.json(result);
   });
@@ -23,7 +23,7 @@ phonebook.get("/:id", (req, res, next) => {
       next(error);
     });
 });
-phonebook.post("", (req, res, next) => {
+phonebook.post("/", (req, res, next) => {
   const body = req.body;
   console.log(body, body.name);
   if (!body.name === "" && !body.number === "") {
@@ -31,9 +31,7 @@ phonebook.post("", (req, res, next) => {
       error: "all fileds required",
     });
   }
-  if (check.test(body.number)) {
-    console.log("yes");
-  }
+
   const person = new Person({
     name: body.name,
     number: body.number,
