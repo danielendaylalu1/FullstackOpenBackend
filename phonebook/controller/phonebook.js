@@ -1,5 +1,7 @@
 const phonebook = require("express").Router();
 
+const Person = require("../models/person");
+
 phonebook.get("", (req, res) => {
   Person.find({}).then((result) => {
     res.json(result);
