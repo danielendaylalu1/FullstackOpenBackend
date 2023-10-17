@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const check = new RegExp("^\\d{2,3}-\\d{6}$");
+
 const personSchema = new mongoose.Schema({
   name: {
     type: String,
