@@ -1,29 +1,25 @@
 const Blog = require("../models/blog");
 const blogs = require("express").Router();
 
-blogs.get("/", (request, response) => {
-  Blog.find({})
-    .then((blogs) => {
-      response.json(blogs);
-    })
-    .catch((error) => {
-      response.status(404).json({
-        errro: "no data found",
-      });
+blogs.get("/", async (request, response) => {
+  try {
+    const blogs = await Blog.find({});
+    response.json(blogs);
+  } catch (error) {
+    response.status(404).json({
+      error: "no data found",
     });
+  }
 });
 
-blogs.post("/", (request, response) => {
-  const blog = new Blog(request.body);
-  console.log(blog);
-  blog
-    .save()
-    .then((result) => {
-      response.status(201).json(result);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+blogs.post("/", async (request, response) => {
+  try {
+    const blog = new Blog(request.body);
+    const result = await blog.save();
+    response.status(201).json(result);
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 module.exports = blogs;

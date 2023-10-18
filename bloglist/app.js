@@ -5,10 +5,14 @@ const mongoose = require("mongoose");
 const blogs = require("./controller/blogs");
 const config = require("./utils/config");
 
-const mongoUrl = config.DATABASE_URL;
+const mongoUrl =
+  process.env.NODE_ENV === "test"
+    ? config.TEST_DATABASE_URL
+    : config.DATABASE_URL;
 
+// const mongoUrl = config.DATABASE_URL;
 mongoose.set("strictQuery", false);
-mongoose.connect(mongoUrl).then((res) => {
+mongoose.connect(mongoUrl, (res) => {
   console.log("connected to moongose");
 });
 
