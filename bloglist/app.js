@@ -12,9 +12,17 @@ const mongoUrl =
 
 // const mongoUrl = config.DATABASE_URL;
 mongoose.set("strictQuery", false);
-mongoose.connect(mongoUrl, (res) => {
-  console.log("connected to moongose");
-});
+(async () => {
+  try {
+    const res = await mongoose.connect(mongoUrl);
+    console.log("connected to mongoose");
+  } catch (error) {
+    console.log("error while connecting to mongoose");
+  }
+})();
+// mongoose.connect(mongoUrl).then((res) => {
+//   console.log("connected to mongose");
+// });
 
 app.use(cors());
 app.use(express.json());

@@ -12,13 +12,14 @@ blogs.get("/", async (request, response) => {
   }
 });
 
-blogs.post("/", async (request, response) => {
+blogs.post("/", async (request, response, next) => {
   try {
     const blog = new Blog(request.body);
     const result = await blog.save();
     response.status(201).json(result);
   } catch (error) {
     console.log(error);
+    next(error);
   }
 });
 

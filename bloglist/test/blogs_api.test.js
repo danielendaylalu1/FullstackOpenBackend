@@ -2,49 +2,78 @@ const supertest = require("supertest");
 const app = require("../app");
 const mongoose = require("mongoose");
 const Blog = require("../models/blog");
+const { initialState } = require("../utils/blog_helper");
 
 const api = supertest(app);
 
-const initialState = [
-  {
-    author: "daniel",
-    likes: 5,
-    title: "some trail",
-    url: "https://trail.com",
-  },
-  {
-    author: "abebe",
-    likes: 2,
-    title: "start the path",
-    url: "https://path.com",
-  },
-];
-
 beforeEach(async () => {
   await Blog.deleteMany({});
-  let newBlog = new Blog(initialState[0]);
-  await newBlog.save();
-  newBlog = new Blog(initialState[1]);
-  await newBlog.save();
-});
+  for (let blog of initialState) {
+    const newBlog = new Blog(blog);
+    await newBlog.save();
+  }
+}, 1000000);
 
-test("should retern json", async () => {
+test("check http get request", async () => {
   await api
     .get("/api/blogs")
     .expect(200)
     .expect("Content-Type", /application\/json/);
+
+  const blogs = await api.get("/api/blogs");
+  console.log(blogs.body);
+
+  expect(blogs.body).toHaveLength(initialState.length);
+}, 1000000);
+
+test("verifies unique id property", async () => {
+  const resp = await api.get("/api/blogs");
+  for (let blog of resp.body) {
+    console.log(blog.id);
+    expect(blog.id).toBeDefined();
+  }
+}, 1000000);
+
+test("check http post", async () => {
+  const newBlog = {
+    author: "beki",
+    title: "the v8 engine",
+    url: "https://v8.com",
+    likes: 1,
+  };
+  await api
+    .post("/api/blogs")
+    .send(newBlog)
+    .expect(201)
+    .expect("Content-Type", /application\/json/);
+
+  const resp = await api.get("/api/blogs");
+  const blogsTitle = resp.body.map((blog) => blog.title);
+
+  expect(resp.body).toHaveLength(initialState.length + 1);
+  expect(blogsTitle).toContain("the v8 engine");
 }, 100000);
 
-test("should load blogs of length 3", async () => {
-  const resp = await api.get("/api/blogs");
-  console.log(resp.body.length);
-  expect(resp.body).toHaveLength(3);
+test("check http post for missing like property", async () => {
+  const newBlog = {
+    author: "beki",
+    title: "the v8 engine",
+    url: "https://v8.com",
+  };
+
+  const resp = await api.post("/api/blogs", newBlog);
+  const blog = resp.body;
+
+  expect(blog.likes).toBe(0);
 }, 100000);
 
-test.only("should author be daniel", async () => {
-  const resp = await api.get("/api/blogs");
-  console.log(resp.body[0].author);
-  expect(resp.body[0].author).toBe("daniel");
+test("check http post for missing properties", async () => {
+  const newBlog = {
+    author: "beki",
+    likes: 5,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
 }, 100000);
 
 afterAll(async () => {

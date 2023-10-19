@@ -3,8 +3,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "author":"dani",
+    "author":"danssi",
     "title":"the node enviroment",
-    "url":"https://node.com",
+    "url":"https://nossde.com",
     "likes":1
 }
