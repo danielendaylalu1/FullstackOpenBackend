@@ -76,6 +76,24 @@ test("check http post for missing properties", async () => {
   await api.post("/api/blogs").send(newBlog).expect(400);
 }, 100000);
 
+test("check http put for updating blogs", async () => {
+  const blogs = await Blog.find({});
+  const toUpdateBlog = blogs[0];
+  const id = toUpdateBlog.id;
+  const newBlog = { ...toUpdateBlog, likes: 8 };
+
+  await api.put(`/api/blogs/${id}`).send(newBlog).expect(200);
+
+  const result = await api.put(`/api/blogs/${id}`, newBlog, {
+    new: true,
+    runValidators: true,
+    content: "query",
+  });
+  console.log(result.body);
+
+  expect(result.body.likes).toBe(8);
+}, 100000);
+
 afterAll(async () => {
   await mongoose.connection.close();
 });

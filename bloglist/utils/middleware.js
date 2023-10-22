@@ -1,1 +1,3 @@
-const errHandler = (error, resq, resp, next) => {};
+// const errHandler = (error, resq, resp, next) => {
+//     if(error.message === "")
+// };
