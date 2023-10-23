@@ -1,13 +1,19 @@
 const Blog = require("../models/blog");
 const blogs = require("express").Router();
+const User = require("../models/user");
+const { use } = require("./users");
 
 blogs.get("/", async (request, response) => {
   try {
-    const blogs = await Blog.find({});
+    const blogs = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
     response.json(blogs);
   } catch (error) {
-    response.status(404).json({
-      error: "no data found",
+    console.log(error);
+    response.status(400).json({
+      error: error.message,
     });
   }
 });
@@ -24,14 +30,27 @@ blogs.get("/:id", async (req, res) => {
   }
 });
 
-blogs.post("/", async (request, response, next) => {
+blogs.post("/", async (req, res, next) => {
   try {
-    const blog = new Blog(request.body);
+    const { author, title, url, likes, userId } = req.body;
+
+    const user = await User.findById(userId);
+
+    const blog = new Blog({
+      author: author,
+      title: title,
+      url: url,
+      likes: likes,
+      user: user.id,
+    });
     const result = await blog.save();
-    response.status(201).json(result);
+    user.blogs = user.blogs.concat(result._id);
+    await user.save();
+
+    res.status(201).json(result);
   } catch (error) {
     console.log(error);
-    response.status(400).json({
+    res.status(400).json({
       error: error.message,
     });
     // next(error);
