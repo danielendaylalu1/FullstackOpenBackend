@@ -1,10 +1,9 @@
 
-PUT http://localhost:3003/api/blogs/652ead0b4eb86a0ddfb63e9a
+POST http://localhost:3003/api/users/
 Content-Type: application/json
 
 {
-    "author":"danssi",  
-    "likes":1,
-    "title":"the large man",
-    "url": "http://large.com"
+   "username":"dana",
+   "name":"daniel",
+   "password":"12345678"
 }
