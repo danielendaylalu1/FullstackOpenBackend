@@ -1,6 +1,9 @@
-const create = async (user) => {
-  const request = await axios.post("/api/users/login", user);
+import axios from "axios";
+const baseUrl = "/api/users/login";
+
+const login = async (user) => {
+  const request = await axios.post(`http://localhost:3003${baseUrl}`, user);
   return request.data;
 };
 
-export default { create };
+export default { login };

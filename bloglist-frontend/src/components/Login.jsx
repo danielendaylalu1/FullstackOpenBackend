@@ -18,7 +18,7 @@ const Login = ({
         />
       </div>
       <div>
-        username
+        password
         <input
           type="password"
           value={password}
@@ -27,6 +27,7 @@ const Login = ({
           }}
         />
       </div>
+      <button type="submit">Login</button>
     </form>
   );
 };

@@ -58,7 +58,7 @@ users.post("/", async (req, res) => {
 
 users.post("/login", async (req, res) => {
   try {
-    const { username, name, password } = req.body;
+    const { username, password } = req.body;
     const user = await User.findOne({ username });
     const passwordCorrect =
       user === null ? false : await bcrypt.compare(password, user.passwordHash);

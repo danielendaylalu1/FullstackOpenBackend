@@ -6,4 +6,9 @@ const getAll = async () => {
   return request.data;
 };
 
-export default { getAll };
+const getOne = async (id) => {
+  const request = await axios.get(`http://localhost:3003${baseUrl}/${id}`);
+  return request.data;
+};
+
+export default { getAll, getOne };

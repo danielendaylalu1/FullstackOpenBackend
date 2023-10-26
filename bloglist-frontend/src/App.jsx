@@ -12,10 +12,17 @@ const App = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  };
-  const getBlogs = async () => {
     try {
-      const result = await blogService.getAll();
+      const data = await userService.login({ username, password });
+      console.log(data);
+      setUser(data);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+  const getBlog = async () => {
+    try {
+      const result = await blogService.getOne("2");
       console.log(result);
       setBlogs(result.data);
     } catch (error) {
@@ -25,7 +32,7 @@ const App = () => {
 
   useEffect(() => {
     // blogService.getAll().then((blogs) => setBlogs(blogs));
-    getBlogs();
+    getBlog();
   }, []);
 
   return (
@@ -40,7 +47,8 @@ const App = () => {
           handleLogin={handleLogin}
         />
       ) : (
-        blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
+        // blogs.map((blog) => <Blog key={blog.id} blog={blog} />)
+        <div>blogs</div>
       )}
     </div>
   );
