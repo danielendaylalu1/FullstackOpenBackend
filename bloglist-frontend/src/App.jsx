@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import blogService from "./services/blogs";
 import userService from "./services/users";
 import Login from "./components/Login";
+import "./style.css";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -11,6 +12,8 @@ const App = () => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const [message, setMessage] = useState(null);
+  const [err, setErr] = useState(false);
 
   const [user, setUser] = useState(null);
 
@@ -23,10 +26,18 @@ const App = () => {
       blogService.setTocken(data.tocken);
       setUser(data);
       setBlogs(data.user.blogs);
+      setMessage(`logged in succesfully`);
+      setErr(false);
+      setTimeout(() => {
+        setMessage("");
+      }, 4000);
       setPassword("");
       setUsername("");
     } catch (error) {
-      console.log(error.message);
+      const errormesage = error.response.data.error;
+      setErr(true);
+      setMessage(errormesage);
+      console.log(errormesage);
     }
   };
   const blogHandler = async (e) => {
@@ -45,10 +56,17 @@ const App = () => {
         userId: user.user.id,
       });
       // blogs.concat(blog);
+      setErr(false);
+      setMessage(`a new blog ${blog.title} by ${blog.author} added`);
+      setTimeout(() => {
+        setMessage("");
+      }, 4000);
       setBlogs(blogs.concat(blog));
       console.log(blog);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
+      setErr(true);
+      setMessage(error.response.data.error);
     }
   };
 
@@ -65,6 +83,8 @@ const App = () => {
   return (
     <div>
       {/* <h2>blogs</h2> */}
+      <h2>wellcome</h2>
+      {message && <p className={err ? `error` : `success`}>{message}</p>}
       {user === null ? (
         <Login
           username={username}
@@ -84,6 +104,7 @@ const App = () => {
               onClick={() => {
                 console.log("deleted");
                 window.localStorage.removeItem("user");
+                setMessage(null);
                 setUser(null);
               }}
             >
