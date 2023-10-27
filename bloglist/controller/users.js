@@ -59,7 +59,7 @@ users.post("/", async (req, res) => {
 users.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).populate("blogs");
     const passwordCorrect =
       user === null ? false : await bcrypt.compare(password, user.passwordHash);
     if (!(user && passwordCorrect)) {
@@ -73,10 +73,8 @@ users.post("/login", async (req, res) => {
       id: user._id,
     };
 
-    const tocken = jwt.sign(forTocken, process.env.SECRET, {
-      expiresIn: 60 * 60,
-    });
-    res.status(200).json({ tocken, username: user.username, name: user.name });
+    const tocken = jwt.sign(forTocken, process.env.SECRET);
+    res.status(200).json({ tocken, user: user });
   } catch (error) {
     res.status(400).json({
       error: error.message,

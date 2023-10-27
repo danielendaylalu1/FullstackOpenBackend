@@ -33,19 +33,22 @@ blogs.get("/:id", async (req, res) => {
 
 blogs.post("/", async (req, res, next) => {
   const getUserTocken = (req) => {
-    const authorization = req.get("authorization");
-    if (authorization && authorization.startWith("Bearer")) {
-      return authorization.replace("Bearer", "");
+    const authorization = req.get("Authorization");
+    console.log(authorization && authorization.startsWith("Bearer"));
+    if (authorization && authorization.startsWith("Bearer")) {
+      return authorization.replace("Bearer", "").trim();
+    } else {
+      return null;
     }
-    return null;
   };
 
   try {
     const { author, title, url, likes, userId } = req.body;
+    console.log(getUserTocken(req));
     const decodedTocken = jwt.verify(getUserTocken(req), process.env.SECRET);
 
     if (!decodedTocken.id) {
-      res.status(401).json({ error: "invalid tocken" });
+      return res.status(401).json({ error: "invalid tocken..........." });
     }
 
     const user = await User.findById(decodedTocken.id);
