@@ -73,7 +73,9 @@ users.post("/login", async (req, res) => {
       id: user._id,
     };
 
-    const tocken = jwt.sign(forTocken, process.env.SECRET);
+    const tocken = jwt.sign(forTocken, process.env.SECRET, {
+      expiresIn: 60 * 60,
+    });
     res.status(200).json({ tocken, user: user });
   } catch (error) {
     res.status(400).json({

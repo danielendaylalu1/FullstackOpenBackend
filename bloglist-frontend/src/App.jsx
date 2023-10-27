@@ -4,16 +4,16 @@ import blogService from "./services/blogs";
 import userService from "./services/users";
 import Login from "./components/Login";
 import "./style.css";
+import CreateBlog from "./components/CreateBlog";
+import Blog from "./components/Blog";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [title, setTitle] = useState("");
-  const [author, setAuthor] = useState("");
-  const [url, setUrl] = useState("");
   const [message, setMessage] = useState(null);
   const [err, setErr] = useState(false);
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
   const [user, setUser] = useState(null);
 
@@ -38,35 +38,6 @@ const App = () => {
       setErr(true);
       setMessage(errormesage);
       console.log(errormesage);
-    }
-  };
-  const blogHandler = async (e) => {
-    e.preventDefault();
-    console.log({
-      title,
-      author,
-      url,
-      userId: user.user.id,
-    });
-    try {
-      const blog = await blogService.create({
-        title,
-        author,
-        url,
-        userId: user.user.id,
-      });
-      // blogs.concat(blog);
-      setErr(false);
-      setMessage(`a new blog ${blog.title} by ${blog.author} added`);
-      setTimeout(() => {
-        setMessage("");
-      }, 4000);
-      setBlogs(blogs.concat(blog));
-      console.log(blog);
-    } catch (error) {
-      console.log(error);
-      setErr(true);
-      setMessage(error.response.data.error);
     }
   };
 
@@ -110,44 +81,42 @@ const App = () => {
             >
               Logout
             </button>
-            <form onSubmit={blogHandler}>
-              <h2>Create new</h2>
-              <div>
-                title:
-                <input
-                  type="text"
-                  value={title}
-                  onChange={({ target }) => {
-                    setTitle(target.value);
-                  }}
+            {isFormVisible ? (
+              <>
+                <CreateBlog
+                  setBlogs={setBlogs}
+                  setErr={setErr}
+                  setMessage={setMessage}
+                  setIsFormVisible={setIsFormVisible}
+                  blogs={blogs}
+                  user={user}
+                  isFormVisible={isFormVisible}
                 />
-              </div>
+                <div>
+                  <button
+                    onClick={() => {
+                      setIsFormVisible(!isFormVisible);
+                    }}
+                  >
+                    cancel
+                  </button>
+                </div>
+              </>
+            ) : (
               <div>
-                author:
-                <input
-                  type="text"
-                  value={author}
-                  onChange={({ target }) => {
-                    setAuthor(target.value);
+                <button
+                  onClick={() => {
+                    setIsFormVisible(!isFormVisible);
                   }}
-                />
+                >
+                  newNote
+                </button>
               </div>
-              <div>
-                url:
-                <input
-                  type="text"
-                  value={url}
-                  onChange={({ target }) => {
-                    setUrl(target.value);
-                  }}
-                />
-              </div>
-              <button type="submit">Create</button>
-            </form>
+            )}
           </h3>
           <div>
             {blogs.map((blog, index) => {
-              return <p key={index}>{blog.title}</p>;
+              return <Blog blog={blog} key={index} user={user} />;
             })}
           </div>
         </div>
