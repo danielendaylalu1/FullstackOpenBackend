@@ -9,7 +9,7 @@ import Blog from "./components/Blog";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
-
+  const [check, setCheck] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
@@ -22,7 +22,7 @@ const App = () => {
     e.preventDefault();
     try {
       const data = await userService.login({ username, password });
-
+      setCheck("check");
       console.log(data);
       window.localStorage.setItem("user", JSON.stringify(data));
       blogService.setTocken(data.tocken);

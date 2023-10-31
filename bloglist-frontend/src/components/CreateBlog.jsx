@@ -1,5 +1,6 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
+import propTypes from "prop-types";
 
 const CreateBlog = ({
   setBlogs,
@@ -80,6 +81,16 @@ const CreateBlog = ({
       <button type="submit">Create</button>
     </form>
   );
+};
+
+CreateBlog.propTypes = {
+  setBlogs: propTypes.func.isRequired,
+  setMessage: propTypes.func.isRequired,
+  setErr: propTypes.func.isRequired,
+  blogs: propTypes.array.isRequired,
+  setIsFormVisible: propTypes.func.isRequired,
+  user: propTypes.object.isRequired,
+  isFormVisible: propTypes.bool.isRequired,
 };
 
 export default CreateBlog;

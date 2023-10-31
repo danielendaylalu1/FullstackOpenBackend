@@ -1,7 +1,7 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 
-const Blog = ({ blog, user, setBlogs, blogs }) => {
+const Blog = ({ blog, setBlogs }) => {
   const [showDetail, setShowDetail] = useState(false);
 
   const handleLike = async (blog, id) => {
