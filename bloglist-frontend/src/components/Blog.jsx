@@ -1,7 +1,20 @@
 import { useState } from "react";
+import blogService from "../services/blogs";
 
-const Blog = ({ blog, user }) => {
+const Blog = ({ blog, user, setBlogs, blogs }) => {
   const [showDetail, setShowDetail] = useState(false);
+
+  const handleLike = async (blog, id) => {
+    const updatedBlog = await blogService.like(blog, id);
+    setBlogs((prv) => {
+      return prv.map((blog) => {
+        if (blog.id === updatedBlog.id) {
+          return (blog = updatedBlog);
+        }
+        return blog;
+      });
+    });
+  };
   return (
     <div>
       <h3 className="card">
@@ -12,12 +25,20 @@ const Blog = ({ blog, user }) => {
       </h3>
       {showDetail && (
         <div className="card">
-          <a href={blog.url}>{blog.url}</a>
+          link:<a href={blog.url}> {blog.url}</a>
           <p>
-            likes: {blog.likes} <button>Like</button>
+            likes: {blog.likes}{" "}
+            <button
+              type="button"
+              onClick={() => {
+                handleLike({ ...blog, likes: blog.likes + 1 }, blog.id);
+              }}
+            >
+              Like
+            </button>
           </p>
-          <p>{blog.author}</p>
-          <p>{user.user.name}</p>
+          <p>author: {blog.author}</p>
+          <p>name: {blog.name}</p>
         </div>
       )}
     </div>

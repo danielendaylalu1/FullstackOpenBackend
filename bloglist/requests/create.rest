@@ -1,11 +1,9 @@
 
-POST http://localhost:3003/api/blogs
+POST http://localhost:3003/api/users
 Content-Type: application/json
 
 {
-    "author":"brad",  
-    "likes":5,
-    "title":"the brad man",
-    "url": "http://brad.com",
-    "userId":"65361e0a7da9971f94a27181"
+    "username":"danu",
+    "name":"daniel",
+    "password":"12345678"
 }

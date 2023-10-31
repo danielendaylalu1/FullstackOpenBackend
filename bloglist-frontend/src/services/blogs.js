@@ -31,5 +31,12 @@ const create = async (user) => {
   );
   return request.data;
 };
+const like = async (blog, id) => {
+  const request = await axios.put(
+    `http://localhost:3003${baseUrl}/${id}`,
+    blog
+  );
+  return request.data;
+};
 
-export default { getAll, create, setTocken, tocken };
+export default { getAll, create, setTocken, tocken, like };

@@ -17,26 +17,8 @@ users.get("/", async (req, res) => {
 users.post("/", async (req, res) => {
   try {
     const { username, name, password } = req.body;
-    const user = await User.findOne({ username });
-    const passwordCorrect =
-      user === null ? false : await bcrypt.compare(password, user.passwordHash);
-    if (!(user && passwordCorrect)) {
-      return res.status(400).json({
-        error: "password or username not correct",
-      });
-    }
-    if (password.length < 3) {
-      return res.status(400).json({
-        error: "password is too short",
-      });
-    }
 
-    const forTocken = {
-      username: user.username,
-      id: user._id,
-    };
-
-    const tocken = jwt.sign(forTocken, process.env.SECRET);
+    // const tocken = jwt.sign(forTocken, process.env.SECRET);
 
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, 10);
@@ -46,9 +28,7 @@ users.post("/", async (req, res) => {
       passwordHash,
     });
     const newUser = await newuser.save();
-    res
-      .status(201)
-      .json({ tocken, username: newUser.username, name: newUser.name });
+    res.status(201).json({ username: newUser.username, name: newUser.name });
   } catch (error) {
     res.status(400).json({
       error: error.message,

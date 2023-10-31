@@ -9,6 +9,7 @@ import Blog from "./components/Blog";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState(null);
@@ -21,11 +22,12 @@ const App = () => {
     e.preventDefault();
     try {
       const data = await userService.login({ username, password });
+
       console.log(data);
       window.localStorage.setItem("user", JSON.stringify(data));
       blogService.setTocken(data.tocken);
       setUser(data);
-      setBlogs(data.user.blogs);
+
       setMessage(`logged in succesfully`);
       setErr(false);
       setTimeout(() => {
@@ -41,14 +43,22 @@ const App = () => {
     }
   };
 
+  const getBlogs = async () => {
+    // const result = await userService.getOne();
+    const blogs = await blogService.getAll();
+    setBlogs(blogs);
+    // setBlogs()
+  };
+
   useEffect(() => {
     const loggedUser = window.localStorage.getItem("user");
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
       setUser(user);
-      setBlogs(user.user.blogs);
+
       blogService.setTocken(user.tocken);
     }
+    getBlogs();
   }, []);
 
   return (
@@ -116,7 +126,16 @@ const App = () => {
           </h3>
           <div>
             {blogs.map((blog, index) => {
-              return <Blog blog={blog} key={index} user={user} />;
+              return (
+                <Blog
+                  blog={blog}
+                  key={index}
+                  user={user}
+                  setUser={setUser}
+                  setBlogs={setBlogs}
+                  blogs={blogs}
+                />
+              );
             })}
           </div>
         </div>
