@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
-import { addVote, startFilter } from "../reducers/anecdoteReducer";
+import { addVote } from "../store/anecdoteSlice";
+import FilterAnecdote from "./FilterAnecdote";
 const AnecdoteList = () => {
   let filter = useSelector((state) => state.filter);
   let anecdotes = useSelector((state) => state.anecdote);
@@ -13,15 +14,7 @@ const AnecdoteList = () => {
   const dispatch = useDispatch();
   return (
     <>
-      <div>
-        filter:
-        <input
-          onChange={(e) => {
-            console.log(e.target.value);
-            dispatch(startFilter(e.target.value.trim()));
-          }}
-        />
-      </div>
+      <FilterAnecdote />
       <br />
       {anecdotes.map((anecdote) => (
         <div key={anecdote.id}>
