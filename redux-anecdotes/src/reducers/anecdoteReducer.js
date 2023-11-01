@@ -22,15 +22,24 @@ const initialState = anecdotesAtStart.map(asObject);
 const reducer = (state = initialState, action) => {
   console.log("state now: ", state);
   console.log("action", action);
-  if (action.type == "VOTE") {
-    let changedAnecdote = state.find((obj) => obj.id === action.payload.id);
-    changedAnecdote = { ...changedAnecdote, votes: changedAnecdote.votes + 1 };
-    return state.map((obj) =>
-      obj.id === changedAnecdote.id ? changedAnecdote : obj
-    );
-  }
+  let changedAnecdote;
+  switch (action.type) {
+    case "VOTE":
+      changedAnecdote = state.find((obj) => obj.id === action.payload.id);
+      changedAnecdote = {
+        ...changedAnecdote,
+        votes: changedAnecdote.votes + 1,
+      };
+      return state.map((obj) =>
+        obj.id === changedAnecdote.id ? changedAnecdote : obj
+      );
 
-  return state;
+    case "ADD":
+      return [...state, action.payload];
+
+    default:
+      return state;
+  }
 };
 
 export const addVote = (id) => {
@@ -38,6 +47,17 @@ export const addVote = (id) => {
     type: "VOTE",
     payload: {
       id,
+    },
+  };
+};
+
+export const addAnecdote = (content) => {
+  return {
+    type: "ADD",
+    payload: {
+      content,
+      votes: 0,
+      id: getId(),
     },
   };
 };
