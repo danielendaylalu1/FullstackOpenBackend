@@ -2,7 +2,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { addVote } from "../store/anecdoteSlice";
 import FilterAnecdote from "./FilterAnecdote";
-const AnecdoteList = () => {
+const AnecdoteList = ({ setMessage, setShowMessage }) => {
   let filter = useSelector((state) => state.filter);
   let anecdotes = useSelector((state) => state.anecdote);
   anecdotes = anecdotes.filter((anecdote) =>
@@ -21,7 +21,19 @@ const AnecdoteList = () => {
           <div>{anecdote.content}</div>
           <div>
             has {anecdote.votes}
-            <button onClick={() => dispatch(addVote(anecdote.id))}>vote</button>
+            <button
+              onClick={() => {
+                dispatch(addVote(anecdote.id));
+                setMessage(`you voted '${anecdote.content}'`);
+                setShowMessage(true);
+                setTimeout(() => {
+                  setShowMessage(false);
+                  setMessage("");
+                }, 5000);
+              }}
+            >
+              vote
+            </button>
           </div>
         </div>
       ))}

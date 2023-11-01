@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { addAnecdote } from "../store/anecdoteSlice";
-const AnecdoteForm = () => {
+const AnecdoteForm = ({ setMessage, setShowMessage }) => {
   const dispatch = useDispatch();
   return (
     <>
@@ -11,6 +11,12 @@ const AnecdoteForm = () => {
           const content = e.target.content.value;
           console.log(content);
           dispatch(addAnecdote(content));
+          setMessage(`created '${content}'`);
+          setShowMessage(true);
+          setTimeout(() => {
+            setShowMessage(false);
+            setMessage("");
+          }, 5000);
           e.target.content.value = "";
         }}
       >
