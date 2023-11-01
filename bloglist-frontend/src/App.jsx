@@ -119,7 +119,7 @@ const App = () => {
                     setIsFormVisible(!isFormVisible);
                   }}
                 >
-                  newNote
+                  new Blog
                 </button>
               </div>
             )}
