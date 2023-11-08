@@ -1,7 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
-import { addVote } from "../store/anecdoteSlice";
+import { addVote, initializeAnecdote } from "../store/anecdoteSlice";
 import FilterAnecdote from "./FilterAnecdote";
+import { useEffect } from "react";
+
 const AnecdoteList = ({ setMessage, setShowMessage }) => {
   let filter = useSelector((state) => state.filter);
   let anecdotes = useSelector((state) => state.anecdote);
@@ -12,6 +14,10 @@ const AnecdoteList = ({ setMessage, setShowMessage }) => {
     return b.votes - a.votes;
   });
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(initializeAnecdote());
+  }, []);
   return (
     <>
       <FilterAnecdote />
@@ -26,10 +32,14 @@ const AnecdoteList = ({ setMessage, setShowMessage }) => {
                 dispatch(addVote(anecdote.id));
                 setMessage(`you voted '${anecdote.content}'`);
                 setShowMessage(true);
-                setTimeout(() => {
+                const messageTimout = setTimeout(() => {
                   setShowMessage(false);
                   setMessage("");
-                }, 5000);
+                }, 2000);
+
+                return () => {
+                  clearTimeout(messageTimout);
+                };
               }}
             >
               vote

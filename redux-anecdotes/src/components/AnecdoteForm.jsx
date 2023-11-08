@@ -1,7 +1,10 @@
+/* eslint-disable react/prop-types */
 import { useDispatch } from "react-redux";
-import { addAnecdote } from "../store/anecdoteSlice";
+import { createNewAnecdote } from "../store/anecdoteSlice";
+
 const AnecdoteForm = ({ setMessage, setShowMessage }) => {
   const dispatch = useDispatch();
+
   return (
     <>
       <h2>create new</h2>
@@ -10,14 +13,22 @@ const AnecdoteForm = ({ setMessage, setShowMessage }) => {
           e.preventDefault();
           const content = e.target.content.value;
           console.log(content);
-          dispatch(addAnecdote(content));
+          dispatch(
+            createNewAnecdote({
+              content,
+              votes: 0,
+            })
+          );
           setMessage(`created '${content}'`);
           setShowMessage(true);
-          setTimeout(() => {
+          const messageTimout = setTimeout(() => {
             setShowMessage(false);
             setMessage("");
-          }, 5000);
+          }, 2000);
           e.target.content.value = "";
+          return () => {
+            clearTimeout(messageTimout);
+          };
         }}
       >
         <div>
