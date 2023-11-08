@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { initializeAnecdote, voteAnecdote } from "../store/anecdoteSlice";
 import FilterAnecdote from "./FilterAnecdote";
 import { useEffect } from "react";
+import { manageNotification } from "../store/notificationSlice";
 
-const AnecdoteList = ({ setMessage, setShowMessage }) => {
+const AnecdoteList = () => {
   let filter = useSelector((state) => state.filter);
   let anecdotes = useSelector((state) => state.anecdote);
   anecdotes = anecdotes.filter((anecdote) =>
@@ -35,16 +36,9 @@ const AnecdoteList = ({ setMessage, setShowMessage }) => {
                     votes: anecdote.votes + 1,
                   })
                 );
-                setMessage(`you voted '${anecdote.content}'`);
-                setShowMessage(true);
-                const messageTimout = setTimeout(() => {
-                  setShowMessage(false);
-                  setMessage("");
-                }, 2000);
-
-                return () => {
-                  clearTimeout(messageTimout);
-                };
+                dispatch(
+                  manageNotification(`you voted '${anecdote.content}'`, 2000)
+                );
               }}
             >
               vote

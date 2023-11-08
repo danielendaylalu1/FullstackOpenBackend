@@ -1,8 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useDispatch } from "react-redux";
 import { createNewAnecdote } from "../store/anecdoteSlice";
+import { manageNotification } from "../store/notificationSlice";
 
-const AnecdoteForm = ({ setMessage, setShowMessage }) => {
+const AnecdoteForm = () => {
   const dispatch = useDispatch();
 
   return (
@@ -19,16 +20,8 @@ const AnecdoteForm = ({ setMessage, setShowMessage }) => {
               votes: 0,
             })
           );
-          setMessage(`created '${content}'`);
-          setShowMessage(true);
-          const messageTimout = setTimeout(() => {
-            setShowMessage(false);
-            setMessage("");
-          }, 2000);
+          dispatch(manageNotification(`created '${content}'`, 2000));
           e.target.content.value = "";
-          return () => {
-            clearTimeout(messageTimout);
-          };
         }}
       >
         <div>
