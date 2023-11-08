@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useDispatch, useSelector } from "react-redux";
-import { addVote, initializeAnecdote } from "../store/anecdoteSlice";
+import { initializeAnecdote, voteAnecdote } from "../store/anecdoteSlice";
 import FilterAnecdote from "./FilterAnecdote";
 import { useEffect } from "react";
 
@@ -29,7 +29,12 @@ const AnecdoteList = ({ setMessage, setShowMessage }) => {
             has {anecdote.votes}
             <button
               onClick={() => {
-                dispatch(addVote(anecdote.id));
+                dispatch(
+                  voteAnecdote(anecdote.id, {
+                    ...anecdote,
+                    votes: anecdote.votes + 1,
+                  })
+                );
                 setMessage(`you voted '${anecdote.content}'`);
                 setShowMessage(true);
                 const messageTimout = setTimeout(() => {
