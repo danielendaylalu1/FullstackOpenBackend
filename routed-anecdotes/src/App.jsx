@@ -7,6 +7,8 @@ import About from "./pages/About";
 import Footer from "./components/Footer";
 import CreateNew from "./pages/CreateNew";
 import Anecdote from "./pages/Anecdote";
+import { Container } from "@mui/material";
+import { Alert } from "react-bootstrap";
 
 const App = () => {
   const navigate = useNavigate();
@@ -59,10 +61,10 @@ const App = () => {
     : null;
 
   return (
-    <div>
+    <Container>
       <h1>Software anecdotes</h1>
       <Menu />
-      {notification && <p>{notification}</p>}
+      {notification && <Alert variant="success">{notification}</Alert>}
       <Routes>
         <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
         <Route path="/create" element={<CreateNew addNew={addNew} />} />
@@ -73,7 +75,7 @@ const App = () => {
         />
       </Routes>
       <Footer />
-    </div>
+    </Container>
   );
 };
 

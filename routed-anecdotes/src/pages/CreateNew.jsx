@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useField } from "../hooks";
+import { Form } from "react-bootstrap";
+import { Button, TextField } from "@mui/material";
 
 const CreateNew = (props) => {
   const { reset: contentReset, ...content } = useField("text", "content");
@@ -19,22 +21,31 @@ const CreateNew = (props) => {
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
         <div>
-          content
-          <input {...content} />
+          <TextField label="content" {...content} />
         </div>
         <div>
-          author
-          <input {...author} />
+          <TextField label="author" {...author} />
         </div>
         <div>
-          url for more info
-          <input {...info} />
+          <TextField label="url" {...info} />
         </div>
-        <button type="submit">create</button>
-        <button
+        {/* <Form.Group> */}
+        {/* <Form.Label>content:</Form.Label>
+          <Form.Control {...content}></Form.Control> */}
+        {/* <Form.Label>author:</Form.Label>
+        <Form.Control {...author}></Form.Control>
+        <Form.Label>url:</Form.Label>
+        <Form.Control {...info}></Form.Control> */}
+
+        <Button type="submit" variant="contained" color="primary">
+          create
+        </Button>
+        <Button
           type="button"
+          variant="contained"
+          color="error"
           onClick={() => {
             contentReset();
             authorReset();
@@ -42,8 +53,9 @@ const CreateNew = (props) => {
           }}
         >
           rest
-        </button>
-      </form>
+        </Button>
+        {/* </Form.Group> */}
+      </Form>
     </div>
   );
 };
