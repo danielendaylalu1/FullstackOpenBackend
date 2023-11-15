@@ -3,6 +3,7 @@ import blogService from "../services/blogs";
 import propTypes from "prop-types";
 import { useDispatch } from "react-redux";
 import { setNotification } from "../store/notificationSlice";
+import { createBlogs } from "../store/blogSlice";
 
 const CreateBlog = ({
   setBlogs,
@@ -18,33 +19,17 @@ const CreateBlog = ({
   const dispatch = useDispatch();
 
   const blogHandler = async (e) => {
-    e.preventDefault();
-    console.log({
-      title,
-      author,
-      url,
-      userId: user.user.id,
-    });
     try {
-      const blog = await blogService.create({
-        title,
-        author,
-        url,
-        userId: user.user.id,
-      });
-      // blogs.concat(blog);
       setErr(false);
-
       dispatch(
-        setNotification(`a new blog ${blog.title} by ${blog.author} added`)
+        createBlogs({
+          title,
+          author,
+          url,
+          userId: user.user.id,
+        })
       );
-      setTimeout(() => {
-        // setMessage("");
-        dispatch(setNotification(null));
-      }, 4000);
-      setBlogs(blogs.concat(blog));
       setIsFormVisible(!isFormVisible);
-      console.log(blog);
     } catch (error) {
       console.log(error);
       setErr(true);
@@ -91,8 +76,6 @@ const CreateBlog = ({
 };
 
 CreateBlog.propTypes = {
-  setBlogs: propTypes.func.isRequired,
-  setMessage: propTypes.func.isRequired,
   setErr: propTypes.func.isRequired,
   blogs: propTypes.array.isRequired,
   setIsFormVisible: propTypes.func.isRequired,
