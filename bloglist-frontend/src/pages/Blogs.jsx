@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react";
 import CreateBlog from "../components/CreateBlog";
-import { useSelector } from "react-redux";
-import Blog from "../components/Blog";
 
-const Blogs = ({ user, setErr }) => {
+import { Link } from "react-router-dom";
+
+const Blogs = ({ user, setErr, blogs }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
-  const blogs = useSelector((state) => state.blogs);
 
   return (
     <div>
@@ -44,7 +43,11 @@ const Blogs = ({ user, setErr }) => {
       <p>...................................</p>
       <div>
         {blogs.map((blog, index) => {
-          return <Blog blog={blog} key={index} user={user} blogs={blogs} />;
+          return (
+            <p key={index}>
+              <Link to={`${blog.id}`}>{blog.title}</Link>
+            </p>
+          );
         })}
       </div>
     </div>

@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
-
 import blogService from "./services/blogs";
-
 import Login from "./components/Login";
 import "./style.css";
-import CreateBlog from "./components/CreateBlog";
-import Blog from "./components/Blog";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./store/notificationSlice";
 import { getBlogs } from "./store/blogSlice";
@@ -16,6 +12,7 @@ import Users from "./pages/Users";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import User from "./pages/User";
+import Blog from "./pages/Blog";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -59,11 +56,15 @@ const App = () => {
     console.log(users);
   }, []);
 
-  const match = useMatch("/users/:id");
-  const selectdeUser = match
-    ? users.find((user) => user.id === match.params.id)
+  const matchUser = useMatch("/users/:id");
+  const selectdeUser = matchUser
+    ? users.find((user) => user.id === matchUser.params.id)
     : null;
 
+  const matchBlog = useMatch("/blogs/:id");
+  const blog = matchBlog
+    ? blogs.find((blog) => blog.id === matchBlog.params.id)
+    : null;
   return (
     <div>
       {message && <p className={err ? `error` : `success`}>{message}</p>}
@@ -84,7 +85,11 @@ const App = () => {
               <Route path="/users/:id" element={<User user={selectdeUser} />} />
               <Route
                 path="/blogs"
-                element={<Blogs user={user} setErr={setErr} />}
+                element={<Blogs user={user} blogs={blogs} />}
+              />
+              <Route
+                path="/blogs/:id"
+                element={<Blog user={user} blog={blog} />}
               />
             </Route>
           </Routes>

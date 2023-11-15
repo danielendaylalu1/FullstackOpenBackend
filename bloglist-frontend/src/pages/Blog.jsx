@@ -1,11 +1,13 @@
-import { useState } from "react";
-
-import { handleDelete, handleLike } from "../store/blogSlice";
 import { useDispatch } from "react-redux";
+import { useState } from "react";
+import { handleLike } from "../store/blogSlice";
 
 const Blog = ({ blog }) => {
   const [showDetail, setShowDetail] = useState(false);
   const dispatch = useDispatch();
+  if (!blog) {
+    return null;
+  }
 
   return (
     <div>
@@ -23,6 +25,7 @@ const Blog = ({ blog }) => {
             <button
               type="button"
               onClick={() => {
+                console.log(blog);
                 dispatch(
                   handleLike({ ...blog, likes: blog.likes + 1 }, blog.id)
                 );
