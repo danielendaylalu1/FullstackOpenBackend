@@ -1,20 +1,12 @@
 import { useState } from "react";
-import blogService from "../services/blogs";
 
-const Blog = ({ blog, setBlogs }) => {
+import { handleDelete, handleLike } from "../store/blogSlice";
+import { useDispatch } from "react-redux";
+
+const Blog = ({ blog }) => {
   const [showDetail, setShowDetail] = useState(false);
+  const dispatch = useDispatch();
 
-  const handleLike = async (blog, id) => {
-    const updatedBlog = await blogService.like(blog, id);
-    setBlogs((prv) => {
-      return prv.map((blog) => {
-        if (blog.id === updatedBlog.id) {
-          return (blog = updatedBlog);
-        }
-        return blog;
-      });
-    });
-  };
   return (
     <div>
       <h3 className="card">
@@ -31,7 +23,9 @@ const Blog = ({ blog, setBlogs }) => {
             <button
               type="button"
               onClick={() => {
-                handleLike({ ...blog, likes: blog.likes + 1 }, blog.id);
+                dispatch(
+                  handleLike({ ...blog, likes: blog.likes + 1 }, blog.id)
+                );
               }}
             >
               Like
@@ -39,6 +33,15 @@ const Blog = ({ blog, setBlogs }) => {
           </p>
           <p>author: {blog.author}</p>
           <p>name: {blog.name}</p>
+          <button
+            type="button"
+            onClick={() => {
+              dispatch(handleDelete(blog, blog.id));
+              setShowDetail(false);
+            }}
+          >
+            Delete
+          </button>
         </div>
       )}
     </div>

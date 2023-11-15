@@ -14,11 +14,6 @@ const getAll = async () => {
   return request.data;
 };
 
-// const getOne = async (id) => {
-//   const request = await axios.get(`http://localhost:3003${baseUrl}/${id}`);
-//   return request.data;
-// };
-
 const create = async (user) => {
   const config = {
     headers: { Authorization: tocken },
@@ -39,4 +34,9 @@ const like = async (blog, id) => {
   return request.data;
 };
 
-export default { getAll, create, setTocken, tocken, like };
+const removeBlog = async (id) => {
+  const request = await axios.delete(`http://localhost:3003${baseUrl}/${id}`);
+  return request.data;
+};
+
+export default { getAll, create, setTocken, tocken, like, removeBlog };

@@ -19,6 +19,7 @@ const CreateBlog = ({
   const dispatch = useDispatch();
 
   const blogHandler = async (e) => {
+    e.preventDefault();
     try {
       setErr(false);
       dispatch(
@@ -33,7 +34,6 @@ const CreateBlog = ({
     } catch (error) {
       console.log(error);
       setErr(true);
-
       dispatch(setNotification(error.response.data.error));
     }
   };
