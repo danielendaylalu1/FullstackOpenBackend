@@ -6,13 +6,18 @@ import Login from "./components/Login";
 import "./style.css";
 import CreateBlog from "./components/CreateBlog";
 import Blog from "./components/Blog";
+import { useDispatch, useSelector } from "react-redux";
+import { setNotification } from "./store/notificationSlice";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [check, setCheck] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [message, setMessage] = useState(null);
+  // const [message, setMessage] = useState(null);
+  const message = useSelector((state) => state.notification);
+
+  const dispatch = useDispatch();
   const [err, setErr] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
@@ -28,17 +33,17 @@ const App = () => {
       blogService.setTocken(data.tocken);
       setUser(data);
 
-      setMessage(`logged in succesfully`);
+      dispatch(setNotification(`logged in succesfully`));
       setErr(false);
       setTimeout(() => {
-        setMessage("");
+        dispatch(setNotification(null));
       }, 4000);
       setPassword("");
       setUsername("");
     } catch (error) {
       const errormesage = error.response.data.error;
       setErr(true);
-      setMessage(errormesage);
+      dispatch(setNotification(errormesage));
       console.log(errormesage);
     }
   };
@@ -85,7 +90,7 @@ const App = () => {
               onClick={() => {
                 console.log("deleted");
                 window.localStorage.removeItem("user");
-                setMessage(null);
+                dispatch(setNotification(null));
                 setUser(null);
               }}
             >
@@ -96,7 +101,6 @@ const App = () => {
                 <CreateBlog
                   setBlogs={setBlogs}
                   setErr={setErr}
-                  setMessage={setMessage}
                   setIsFormVisible={setIsFormVisible}
                   blogs={blogs}
                   user={user}

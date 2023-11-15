@@ -1,10 +1,11 @@
 import { useState } from "react";
 import blogService from "../services/blogs";
 import propTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { setNotification } from "../store/notificationSlice";
 
 const CreateBlog = ({
   setBlogs,
-  setMessage,
   setErr,
   blogs,
   setIsFormVisible,
@@ -14,6 +15,7 @@ const CreateBlog = ({
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
+  const dispatch = useDispatch();
 
   const blogHandler = async (e) => {
     e.preventDefault();
@@ -32,9 +34,13 @@ const CreateBlog = ({
       });
       // blogs.concat(blog);
       setErr(false);
-      setMessage(`a new blog ${blog.title} by ${blog.author} added`);
+
+      dispatch(
+        setNotification(`a new blog ${blog.title} by ${blog.author} added`)
+      );
       setTimeout(() => {
-        setMessage("");
+        // setMessage("");
+        dispatch(setNotification(null));
       }, 4000);
       setBlogs(blogs.concat(blog));
       setIsFormVisible(!isFormVisible);
@@ -42,7 +48,8 @@ const CreateBlog = ({
     } catch (error) {
       console.log(error);
       setErr(true);
-      setMessage(error.response.data.error);
+
+      dispatch(setNotification(error.response.data.error));
     }
   };
   return (

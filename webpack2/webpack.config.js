@@ -1,6 +1,10 @@
 const path = require("path");
 
-const config = () => {
+const config = (env, argv) => {
+  const backend_url =
+    argv.mode === "production"
+      ? "https://notes2023.fly.dev/api/notes"
+      : "http://localhost:3001/notes";
   return {
     entry: "./src/index.js",
     output: {
@@ -22,6 +26,17 @@ const config = () => {
         },
       ],
     },
+    devServer: {
+      static: path.resolve(__dirname, "build"),
+      compress: true,
+      port: 3000,
+    },
+    devtool: "source-map",
+    plugins: [
+      new webpack.DefinePlugin({
+        BACKEND_URL: JSON.stringify(backend_url),
+      }),
+    ],
   };
 };
 
