@@ -11,10 +11,11 @@ import { setNotification } from "./store/notificationSlice";
 import { getBlogs } from "./store/blogSlice";
 import { signUser, handleUser } from "./store/userSlice";
 import { handleUsers } from "./store/usersSlice";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useMatch } from "react-router-dom";
 import Users from "./pages/Users";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
+import User from "./pages/User";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -58,6 +59,11 @@ const App = () => {
     console.log(users);
   }, []);
 
+  const match = useMatch("/users/:id");
+  const selectdeUser = match
+    ? users.find((user) => user.id === match.params.id)
+    : null;
+
   return (
     <div>
       {message && <p className={err ? `error` : `success`}>{message}</p>}
@@ -75,7 +81,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Home user={user} />}>
               <Route path="/users" element={<Users users={users} />} />
-              <Route path="/users/:id" element={<h1>user</h1>} />
+              <Route path="/users/:id" element={<User user={selectdeUser} />} />
               <Route
                 path="/blogs"
                 element={<Blogs user={user} setErr={setErr} />}

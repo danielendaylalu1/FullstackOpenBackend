@@ -6,7 +6,7 @@ import Blog from "../components/Blog";
 const Blogs = ({ user, setErr }) => {
   const [isFormVisible, setIsFormVisible] = useState(false);
   const blogs = useSelector((state) => state.blogs);
-  useEffect(() => {}, []);
+
   return (
     <div>
       <h2>Blogs</h2>
