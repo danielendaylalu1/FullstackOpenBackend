@@ -9,6 +9,7 @@ import Blog from "./components/Blog";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotification } from "./store/notificationSlice";
 import { getBlogs } from "./store/blogSlice";
+import { signUser, handleUser } from "./store/userSlice";
 
 const App = () => {
   const blogs = useSelector((state) => state.blogs);
@@ -22,23 +23,14 @@ const App = () => {
   const [err, setErr] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
 
-  const [user, setUser] = useState(null);
+  const user = useSelector((state) => state.user);
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const data = await userService.login({ username, password });
-
-      console.log(data);
-      window.localStorage.setItem("user", JSON.stringify(data));
-      blogService.setTocken(data.tocken);
-      setUser(data);
-
-      dispatch(setNotification(`logged in succesfully`));
+      dispatch(handleUser({ username, password }));
       setErr(false);
-      setTimeout(() => {
-        dispatch(setNotification(null));
-      }, 4000);
+
       setPassword("");
       setUsername("");
     } catch (error) {
@@ -53,11 +45,9 @@ const App = () => {
     const loggedUser = window.localStorage.getItem("user");
     if (loggedUser) {
       const user = JSON.parse(loggedUser);
-      setUser(user);
-
+      dispatch(signUser(user));
       blogService.setTocken(user.tocken);
     }
-
     dispatch(getBlogs());
   }, []);
 
@@ -85,7 +75,7 @@ const App = () => {
                 console.log("deleted");
                 window.localStorage.removeItem("user");
                 dispatch(setNotification(null));
-                setUser(null);
+                dispatch(signUser(null));
               }}
             >
               Logout
@@ -123,15 +113,7 @@ const App = () => {
           </h3>
           <div>
             {blogs.map((blog, index) => {
-              return (
-                <Blog
-                  blog={blog}
-                  key={index}
-                  user={user}
-                  setUser={setUser}
-                  blogs={blogs}
-                />
-              );
+              return <Blog blog={blog} key={index} user={user} blogs={blogs} />;
             })}
           </div>
         </div>
