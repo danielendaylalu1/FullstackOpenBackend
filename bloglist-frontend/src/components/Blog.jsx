@@ -32,7 +32,7 @@ const Blog = ({ blog }) => {
             </button>
           </p>
           <p>author: {blog.author}</p>
-          <p>name: {blog.name}</p>
+          <p>name: {blog.user.name}</p>
           <button
             type="button"
             onClick={() => {

@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 
 users.get("/", async (req, res) => {
   try {
-    const result = await User.find({}).populate("blogs", { user: 0 });
+    const result = await User.find({}).populate("blogs");
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({
