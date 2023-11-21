@@ -9,6 +9,7 @@
   "author": "daniel",
   "license": "ISC",
   "dependencies": {
+    "@apollo/client": "^3.8.7",
     "@apollo/server": "^4.9.5",
     "graphql": "^16.8.1",
     "uuid": "^9.0.1"

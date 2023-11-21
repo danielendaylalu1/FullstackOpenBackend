@@ -127,7 +127,7 @@ const typeDefs = `
     ):Book
     editAuthor(
         name:String!,
-        setBornTo:Int
+        setBornTo:Int!
     ):Author
   }
 `;
@@ -170,7 +170,7 @@ const resolvers = {
     addBook: (root, args) => {
       const newBook = { ...args, id: uuid() };
       books = books.concat(newBook);
-      authors = authors.concat({ name: newBook.author });
+      authors = authors.concat({ name: newBook.author, id: uuid() });
       return newBook;
     },
     editAuthor: (root, args) => {
